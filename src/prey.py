@@ -1,9 +1,10 @@
-from .agent import Agent
+from .creature import Creature
 from .config import WHITE
 
-class Prey(Agent):
-    def __init__(self, x=None, y=None):
-        size = 2
-        color = WHITE
-        super().__init__(size, color)
-        self.vmax = 2.5
+class Prey(Creature):
+    def __init__(self, uid, model, food = ()):
+        self.color = WHITE
+        self.size = 2
+        self.vmax = 2
+        self.food = food
+        super().__init__(uid, model, self.color, self.size, self.food)

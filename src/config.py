@@ -1,5 +1,4 @@
 import pygame
-import random
 
 pygame.init()
 
@@ -13,3 +12,4 @@ GREEN = (0, 128, 0)
 FPS = 24
 
 SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720
+SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))

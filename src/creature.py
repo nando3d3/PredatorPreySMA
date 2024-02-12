@@ -1,11 +1,8 @@
 from mesa import Agent
-from mesa.model import Model
-from mesa.time import RandomActivation
-from config import *
-import math
+import random
+from .config import *
 import pygame
-
-SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+import math
 
 class Creature(Agent):
     def __init__(self, uid, model, color, size, food = ()):
@@ -116,79 +113,3 @@ class Creature(Agent):
             
             if min_dist < 100000:
                 self.target = min_agent
-
-class Predator(Creature):
-    def __init__(self, uid, model, food = ()):
-        self.color = RED
-        self.size = 4
-        self.vmax = 2.5
-        self.food = food
-        super().__init__(uid, model, self.color, self.size, self.food)
-
-class Prey(Creature):
-    def __init__(self, uid, model, food = ()):
-        self.color = WHITE
-        self.size = 2
-        self.vmax = 2
-        self.food = food
-        super().__init__(uid, model, self.color, self.size, self.food)
-        
-class Plant(Creature):
-    def __init__(self, uid, model):
-        self.size = 3
-        self.color = GREEN
-        super().__init__(uid, model, self.color, self.size)
-        self.vmax = 0
-  
-class PredatorPreyModel(Model):
-    def __init__(self, num_predator, num_prey, num_plant):
-        self.schedule = RandomActivation(self)
-        self.num_predator = num_predator
-        self.num_prey = num_prey
-        self.num_plant = num_plant
-
-        prey_agents = []
-        plant_agents = []
-        
-        for i in range(self.num_plant):
-            plant = Plant(i + self.num_predator + self.num_prey, self)
-            self.schedule.add(plant)
-            plant_agents.append(plant)
-            
-        for i in range(self.num_prey):
-            prey = Prey(i + self.num_predator, self, plant_agents)
-            self.schedule.add(prey)
-            prey_agents.append(prey)
-            print(f'Prey {i}')
-            
-        for i in range(self.num_predator):
-            pred = Predator(i, self, prey_agents)
-            self.schedule.add(pred)
-            print(f'Predator {i}')
-               
-    def step(self):
-        self.schedule.step()
-        
-        
-pygame.init()
-
-pygame.display.set_caption("Predator-Prey")
-
-clock = pygame.time.Clock()
-
-predator = PredatorPreyModel(5, 10, 30)
-
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False  # Definindo a flag de execução para False para sair do loop
-    
-    SCREEN.fill(BLACK)
-    
-    predator.step()
-    
-    pygame.display.flip()
-    clock.tick(FPS)
-
-pygame.quit()
